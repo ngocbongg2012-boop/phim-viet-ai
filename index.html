@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phim Việt AI</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --panel: #141b30;
+  --border: #29334d;
+  --pink: #ec4899;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 22px;
+  background: #10162a;
+  border-bottom: 1px solid var(--border);
+}
+.logo { font-size: 21px; font-weight: bold; }
+.logo span { color: var(--pink); }
+.status { color: #86efac; font-size: 12px; }
+main {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 230px;
+  gap: 12px;
+  padding: 14px;
+}
+.panel, .workspace {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  min-width: 0;
+}
+h3 { margin: 0 0 14px; font-size: 14px; }
+label { display: block; margin: 13px 0 7px; color: #cbd5e1; }
+button, select, input, textarea {
+  font: inherit;
+  border-radius: 7px;
+}
+button {
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  background: #222c45;
+  color: white;
+  cursor: pointer;
+}
+button:hover { border-color: var(--pink); }
+.primary { background: var(--pink); border-color: var(--pink); }
+.green { background: #15803d; }
+select, input[type="text"], textarea {
+  width: 100%;
+  padding: 10px;
+  background: #0c1326;
+  border: 1px solid var(--border);
+  color: white;
+}
+input[type="file"] { max-width: 100%; font-size: 12px; }
+.small { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.workspace { min-height: 520px; }
+.video-box {
+  min-height: 280px;
+  background: #080d19;
+  border: 1px dashed #46516c;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  text-align: center;
+}
+video { width: 100%; max-height: 420px; }
+.tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+#subtitles { width: 100%; min-height: 150px; resize: vertical; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+footer { padding: 15px; text-align: center; color: var(--muted); }
+@media (max-width: 850px) {
+  main { grid-template-columns: 1fr; }
+  .workspace { order: -1; }
+  header { padding: 13px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🎬 Phim <span>Việt AI</span></div>
+  <div class="status">● Bản thử nghiệm</div>
+</header>
+
+<main>
+  <aside class="panel">
+    <h3>📂 Phụ đề & tệp</h3>
+    <label>Chọn video</label>
+    <input id="videoFile" type="file" accept="video/*">
+    <p class="small">Video được mở trên trình duyệt của bạn.</p>
+    <label>Nhập file phụ đề SRT</label>
+    <input id="srtFile" type="file" accept=".srt,.vtt,.txt">
+    <div class="actions">
+      <button id="loadSrt">Nạp phụ đề</button>
+    </div>
+    <label>Ngôn ngữ nguồn</label>
+    <select><option>Tiếng Trung</option><option>Tiếng Việt</option></select>
+    <label>Ngôn ngữ đích</label>
+    <select><option>Tiếng Việt</option><option>Tiếng Anh</option></select>
+  </aside>
+
+  <section class="workspace">
+    <div class="tabs">
+      <button class="primary">🎞 Video</button>
+      <button onclick="document.getElementById('srtFile').click()">📄 SRT</button>
+      <button onclick="alert('Chức năng OCR sẽ được bổ sung ở bước tiếp theo.')">🔎 Quét chữ</button>
+      <button onclick="alert('Nhận diện âm thanh sẽ được bổ sung ở bước tiếp theo.')">🎙 Nhận diện giọng nói</button>
+    </div>
+    <div class="video-box" id="videoBox">
+      <div style="font-size:38px">🎬</div>
+      <strong>Chọn video để bắt đầu</strong>
+      <span class="small">MP4 · MOV · WEBM</span>
+      <button class="primary" onclick="document.getElementById('videoFile').click()">Chọn video</button>
+    </div>
+    <label>Văn bản phụ đề — có thể chỉnh sửa</label>
+    <textarea id="subtitles" placeholder="Nội dung SRT sẽ xuất hiện ở đây..."></textarea>
+    <div class="actions">
+      <button id="downloadSrt" class="green">⬇ Xuất file SRT</button>
+      <button onclick="document.getElementById('subtitles').value=''">Xóa nội dung</button>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <h3>⚙️ Cài đặt dịch</h3>
+    <label>Phong cách bản dịch</label>
+    <select>
+      <option>Tự nhiên, thuần Việt</option>
+      <option>Ngôn tình hiện đại</option>
+      <option>Cổ trang</option>
+      <option>Phụ đề ngắn gọn</option>
+    </select>
+    <label>Mô hình dịch</label>
+    <select><option>Chưa kết nối AI</option></select>
+    <p class="small">Kết nối AI sẽ được thiết lập ở bước sau. Không nhập API key vào giao diện công khai.</p>
+    <h3 style="margin-top:24px">🎧 Lồng tiếng AI</h3>
+    <label>Giọng đọc</label>
+    <select><option>Chưa kết nối giọng đọc</option><option>Giọng nữ</option><option>Giọng nam</option></select>
+    <label>Tốc độ đọc</label>
+    <select><option>1x — Bình thường</option><option>0.8x — Chậm</option><option>1.2x — Nhanh</option></select>
+    <button style="width:100%;margin-top:12px" onclick="alert('Chức năng lồng tiếng sẽ được tích hợp ở bước sau.')">🎙 Tạo giọng đọc</button>
+  </aside>
+</main>
+<footer>Phim Việt AI · Công cụ dịch phim Trung–Việt</footer>
+
+<script>
+const videoInput = document.getElementById('videoFile');
+const videoBox = document.getElementById('videoBox');
+const srtInput = document.getElementById('srtFile');
+const subtitles = document.getElementById('subtitles');
+
+videoInput.addEventListener('change', () => {
+  const file = videoInput.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  videoBox.innerHTML = '';
+  const video = document.createElement('video');
+  video.controls = true;
+  video.src = url;
+  videoBox.appendChild(video);
+});
+
+document.getElementById('loadSrt').addEventListener('click', async () => {
+  const file = srtInput.files[0];
+  if (!file) {
+    alert('Hãy chọn một file SRT trước nhé.');
+    return;
+  }
+  subtitles.value = await file.text();
+});
+
+document.getElementById('downloadSrt').addEventListener('click', () => {
+  const blob = new Blob([subtitles.value], {
+    type: 'text/plain;charset=utf-8'
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'phu-de-viet.srt';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

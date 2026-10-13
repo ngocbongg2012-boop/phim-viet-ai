@@ -125,7 +125,7 @@ footer { padding: 15px; text-align: center; color: var(--muted); }
     <div class="tabs">
       <button class="primary">🎞 Video</button>
       <button onclick="document.getElementById('srtFile').click()">📄 SRT</button>
-      <button id="btnOcr" class="primary" style="font-weight: bold;">🔎 Quét chữ (Gemini OCR)</button>
+      <button onclick="triggerOCR()" style="background: var(--pink); border-color: var(--pink); font-weight: bold;">🔎 Quét chữ (Gemini OCR)</button>
       <button onclick="alert('Nhận diện âm thanh sẽ được bổ sung ở bước tiếp theo.')">🎙 Nhận diện giọng nói</button>
     </div>
     <div class="video-box" id="videoBox">
@@ -137,7 +137,7 @@ footer { padding: 15px; text-align: center; color: var(--muted); }
     <canvas id="canvas" style="display:none;"></canvas>
 
     <label style="margin-top: 14px;">Văn bản phụ đề — có thể chỉnh sửa</label>
-    <textarea id="subtitles" placeholder="Nội dung SRT hoặc bản dịch quét từ video sẽ xuất hiện ở đây..."></textarea>
+    <textarea id="subtitles" placeholder="Nội dung SRT sẽ xuất hiện ở đây..."></textarea>
     <div class="actions">
       <button id="downloadSrt" class="green">⬇ Xuất file SRT</button>
       <button onclick="document.getElementById('subtitles').value=''">Xóa nội dung</button>
@@ -148,10 +148,10 @@ footer { padding: 15px; text-align: center; color: var(--muted); }
     <h3>⚙️ Cài đặt dịch</h3>
     <label>Phong cách bản dịch</label>
     <select id="translateStyle">
-      <option value="Tự nhiên, thuần Việt">Tự nhiên, thuần Việt</option>
-      <option value="Ngôn tình hiện đại">Ngôn tình hiện đại</option>
-      <option value="Cổ trang">Cổ trang</option>
-      <option value="Phụ đề ngắn gọn">Phụ đề ngắn gọn</option>
+      <option>Tự nhiên, thuần Việt</option>
+      <option>Ngôn tình hiện đại</option>
+      <option>Cổ trang</option>
+      <option>Phụ đề ngắn gọn</option>
     </select>
     
     <label style="font-weight: bold; margin-top: 10px; display: block;">Mô hình dịch</label>
@@ -227,7 +227,7 @@ function connectGemini() {
   }
 }
 
-document.getElementById('btnOcr').addEventListener('click', async () => {
+async function triggerOCR() {
   const apiKey = document.getElementById('apiKeyInput').value.trim();
   const style = document.getElementById('translateStyle').value;
 
@@ -274,7 +274,7 @@ document.getElementById('btnOcr').addEventListener('click', async () => {
   } catch (err) {
     subtitles.value = "Lỗi kết nối Gemini API: " + err.message;
   }
-});
+}
 </script>
 </body>
 </html>

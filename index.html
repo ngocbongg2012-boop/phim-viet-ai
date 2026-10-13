@@ -63,7 +63,7 @@ button {
 button:hover { border-color: var(--pink); }
 .primary { background: var(--pink); border-color: var(--pink); }
 .green { background: #15803d; }
-select, input[type="text"], textarea {
+select, input[type="text"], input[type="password"], textarea {
   width: 100%;
   padding: 10px;
   background: #0c1326;
@@ -125,7 +125,7 @@ footer { padding: 15px; text-align: center; color: var(--muted); }
     <div class="tabs">
       <button class="primary">🎞 Video</button>
       <button onclick="document.getElementById('srtFile').click()">📄 SRT</button>
-      <button onclick="triggerOCR()" style="background: var(--pink); border-color: var(--pink); font-weight: bold;">🔎 Quét chữ (Gemini OCR)</button>
+      <button id="btnOcr" class="primary" style="font-weight: bold;">🔎 Quét chữ (Gemini OCR)</button>
       <button onclick="alert('Nhận diện âm thanh sẽ được bổ sung ở bước tiếp theo.')">🎙 Nhận diện giọng nói</button>
     </div>
     <div class="video-box" id="videoBox">
@@ -157,10 +157,10 @@ footer { padding: 15px; text-align: center; color: var(--muted); }
     <label style="font-weight: bold; margin-top: 10px; display: block;">Mô hình dịch</label>
     <div style="margin-top: 6px;">
       <label style="font-size: 12px; color: #ccc; margin: 0 0 4px; display: block;">Nhập Gemini API Key:</label>
-      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." style="width: 100%; padding: 8px; background: #0c1326; color: #fff; border: 1px solid var(--border);" />
-      <button type="button" onclick="connectGemini()" class="primary" style="width: 100%; margin-top: 6px; padding: 8px; font-weight: bold;">Kết nối AI</button>
+      <input type="password" id="apiKeyInput" placeholder="AIzaSy..." />
+      <button type="button" onclick="connectGemini()" class="primary" style="width: 100%; margin-top: 6px; font-weight: bold;">Kết nối AI</button>
     </div>
-    <select id="aiModelSelect" style="margin-top: 8px; width: 100%;">
+    <select id="aiModelSelect" style="margin-top: 8px;">
       <option value="">Chưa kết nối AI</option>
     </select>
 
@@ -227,12 +227,12 @@ function connectGemini() {
   }
 }
 
-async function triggerOCR() {
+document.getElementById('btnOcr').addEventListener('click', async () => {
   const apiKey = document.getElementById('apiKeyInput').value.trim();
   const style = document.getElementById('translateStyle').value;
 
   if (!apiKey || !isGeminiConnected) {
-    alert("Mày chưa kết nối Gemini API! Vui lòng dán Key và bấm Kết nối ở cột phải trước.");
+    alert("Mày chưa kết nối Gemini API! Vui lòng dán Key và bấm Kết nối AI ở cột phải trước.");
     return;
   }
 
@@ -274,7 +274,7 @@ async function triggerOCR() {
   } catch (err) {
     subtitles.value = "Lỗi kết nối Gemini API: " + err.message;
   }
-}
+});
 </script>
 </body>
 </html>
